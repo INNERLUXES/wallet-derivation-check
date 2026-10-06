@@ -1,0 +1,947 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "wallet-derivation-check",
+          "version": "1.0.0",
+          "informationUri": "https://github.com/INNERLUXES/wallet-derivation-check",
+          "rules": [
+            {
+              "id": "config-unreadable",
+              "name": "config-unreadable",
+              "shortDescription": {
+                "text": "the file is not JSON the reader can follow, or its top level is not an object, so no configuration was read"
+              },
+              "help": {
+                "text": "Write the configuration as one JSON object (docs/inputs.md), and fix the line named. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "field-missing",
+              "name": "field-missing",
+              "shortDescription": {
+                "text": "a field the checks need is not in the configuration: the wallet name or the entries, or the name, coin, network, path or addressType of an entry"
+              },
+              "help": {
+                "text": "Add the field named; docs/inputs.md lists what each part of the configuration needs. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "field-unknown",
+              "name": "field-unknown",
+              "shortDescription": {
+                "text": "a key the tool does not read, often a misspelt one; its value was left out of every check"
+              },
+              "help": {
+                "text": "Correct the spelling to a key of docs/inputs.md, or remove the key. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "field-invalid",
+              "name": "field-invalid",
+              "shortDescription": {
+                "text": "a value of the wrong type or form: a number where text belongs, a network other than mainnet or testnet, an address type the tool does not know, or a gap limit that is not a whole number"
+              },
+              "help": {
+                "text": "Write the value as docs/inputs.md shows: text for the name, coin, network, path and addressType, and a whole number for gapLimit. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "entry-duplicate",
+              "name": "entry-duplicate",
+              "shortDescription": {
+                "text": "two entries share a name (compared without case and outer spaces), so a reader cannot tell which line a finding comes from"
+              },
+              "help": {
+                "text": "Give each entry a name of its own, or merge the two. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "secret-in-config",
+              "name": "secret-in-config",
+              "shortDescription": {
+                "text": "the configuration holds a key named for a seed, a mnemonic or a private key, or a value shaped like one; the tool never reads it and never shows it"
+              },
+              "help": {
+                "text": "Remove the seed or the key from the file and from the history of the repository, and treat it as exposed: move the funds it holds to a new seed. The configuration lists paths only. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "path-unparsable",
+              "name": "path-unparsable",
+              "shortDescription": {
+                "text": "the path is not m followed by levels that are each a whole number below 2^31 with an optional hardened mark, or a placeholder {account}, {change} or {index} in its place"
+              },
+              "help": {
+                "text": "Write the path as BIP-32 and BIP-44 do, such as m/84'/0'/0'/0/0, or with placeholders, such as m/84'/0'/{account}'/{change}/{index}. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "path-depth",
+              "name": "path-depth",
+              "shortDescription": {
+                "text": "a secp256k1 path that does not have the five levels of BIP-44 (purpose, coin type, account, change and address index), or an ed25519 path with fewer than three"
+              },
+              "help": {
+                "text": "Give the path the five levels of BIP-44, or confirm that the wallets the users restore their seed in derive the same shorter or longer path. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "purpose-mismatch",
+              "name": "purpose-mismatch",
+              "shortDescription": {
+                "text": "the purpose (level 1) is not the one the address type is derived under: 44 for p2pkh, evm and ed25519, 49 for p2sh-p2wpkh, 84 for p2wpkh and 86 for p2tr"
+              },
+              "help": {
+                "text": "Change the purpose to the one of the address type, or the address type to the one of the purpose. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "coin-type-mismatch",
+              "name": "coin-type-mismatch",
+              "shortDescription": {
+                "text": "on mainnet, the coin type (level 2) is not the number SLIP-44 registers for the coin"
+              },
+              "help": {
+                "text": "Change the coin type to the SLIP-44 number of the coin. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "testnet-coin-on-mainnet",
+              "name": "testnet-coin-on-mainnet",
+              "shortDescription": {
+                "text": "a mainnet entry uses coin type 1, which SLIP-44 keeps for the testnets of all coins"
+              },
+              "help": {
+                "text": "Use the SLIP-44 number of the coin on mainnet, and coin type 1 only for a testnet entry. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "mainnet-coin-on-testnet",
+              "name": "mainnet-coin-on-testnet",
+              "shortDescription": {
+                "text": "a testnet entry uses a coin type other than 1, so its keys are the keys of a mainnet subtree"
+              },
+              "help": {
+                "text": "Use coin type 1 for testnet entries, or confirm that the app and the wallets it must match keep the mainnet coin type on this test network. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "level-not-hardened",
+              "name": "level-not-hardened",
+              "shortDescription": {
+                "text": "on a secp256k1 path, the purpose, the coin type or the account is not hardened"
+              },
+              "help": {
+                "text": "Harden the purpose, the coin type and the account with ' or h, as in m/44'/0'/0'/0/0. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "level-hardened",
+              "name": "level-hardened",
+              "shortDescription": {
+                "text": "on a five-level secp256k1 path, the change or the address index is hardened, where BIP-44 uses normal derivation"
+              },
+              "help": {
+                "text": "Remove the hardened mark from the change and the address index. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "change-out-of-range",
+              "name": "change-out-of-range",
+              "shortDescription": {
+                "text": "on a five-level secp256k1 path, the change level is a number other than 0 (receiving) or 1 (change)"
+              },
+              "help": {
+                "text": "Use 0 for receiving addresses and 1 for change addresses, or the placeholder {change}. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "ed25519-unhardened",
+              "name": "ed25519-unhardened",
+              "shortDescription": {
+                "text": "a path of the ed25519 address type has a level that is not hardened, which SLIP-10 does not define for ed25519"
+              },
+              "help": {
+                "text": "Harden every level of an ed25519 path, as in m/44'/501'/0'/0'. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "account-gap",
+              "name": "account-gap",
+              "shortDescription": {
+                "text": "entries of one purpose, coin type and network derive accounts with a gap, or not from account 0, so BIP-44 account discovery stops before the later ones"
+              },
+              "help": {
+                "text": "Number the accounts from 0 with no gap, or use the placeholder {account} and let the app open accounts in order. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "gap-limit-low",
+              "name": "gap-limit-low",
+              "shortDescription": {
+                "text": "the gap limit of an entry is below the 20 of BIP-44"
+              },
+              "help": {
+                "text": "Set gapLimit to 20 or more, so that a seed restored from another wallet shows every address that wallet handed out. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "path-duplicate",
+              "name": "path-duplicate",
+              "shortDescription": {
+                "text": "two entries derive the same path, or paths that can name the same key, so one key serves both"
+              },
+              "help": {
+                "text": "Give each entry a path of its own, or confirm that the two are meant to share one key, such as one EVM address on two networks. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "address-type-family",
+              "name": "address-type-family",
+              "shortDescription": {
+                "text": "the address type is not of the family of the coin in the tool's table: a Bitcoin script type on an EVM coin or on Solana, an EVM address on a Bitcoin coin, and so on"
+              },
+              "help": {
+                "text": "Choose an address type of the family of the coin, or correct the coin. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "coin-not-in-table",
+              "name": "coin-not-in-table",
+              "shortDescription": {
+                "text": "the coin is not in the tool's short table of coins whose SLIP-44 number was read in the saved copy, so its coin type and its family were not checked"
+              },
+              "help": {
+                "text": "Check the coin type of the coin in SLIP-44 by hand, or name the coin as the table does (docs/inputs.md). (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            }
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "location": {
+            "uri": "examples/bad/wallet.json"
+          }
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "secret-in-config",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "The configuration holds the key \"seedPhrase\", which names a seed, a mnemonic or a private key. The tool never reads one, and the value is not shown. Fix: Remove the seed or the key from the file and from the history of the repository, and treat it as exposed: move the funds it holds to a new seed. The configuration lists paths only."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 3
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "entry": null
+          }
+        },
+        {
+          "ruleId": "purpose-mismatch",
+          "ruleIndex": 8,
+          "level": "error",
+          "message": {
+            "text": "The path m/84'/0'/0'/0/{index} of entry Bitcoin nested segwit has purpose 84, but the address type p2sh-p2wpkh is derived under purpose 49 (BIP-49). A wallet that restores the seed looks for p2sh-p2wpkh addresses under 49' and does not find these. Fix: Change the purpose to the one of the address type, or the address type to the one of the purpose."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 18,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Bitcoin nested segwit"
+          }
+        },
+        {
+          "ruleId": "testnet-coin-on-mainnet",
+          "ruleIndex": 10,
+          "level": "error",
+          "message": {
+            "text": "Entry Bitcoin taproot is on mainnet, but its path m/86'/1'/0'/0/{index} has coin type 1, which SLIP-44 keeps for the testnets of all coins. Mainnet funds sent to these addresses sit in the testnet subtree, where a wallet that restores the seed for Bitcoin does not look. Fix: Use the SLIP-44 number of the coin on mainnet, and coin type 1 only for a testnet entry."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 34,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Bitcoin taproot"
+          }
+        },
+        {
+          "ruleId": "path-unparsable",
+          "ruleIndex": 6,
+          "level": "error",
+          "message": {
+            "text": "The path \"m/84'/0'/{wallet}'/0/0\" of entry Bitcoin vault names {wallet} at level 3; the placeholders are {account}, {change} and {index}. BIP-32 writes a path as m and one index per level, each below 2^31 with a mark when it is hardened; the tool also reads {account}, {change} and {index} in place of a level. The other checks of the path were not made for this entry. Fix: Write the path as BIP-32 and BIP-44 do, such as m/84'/0'/0'/0/0, or with placeholders, such as m/84'/0'/{account}'/{change}/{index}."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 49,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Bitcoin vault"
+          }
+        },
+        {
+          "ruleId": "coin-type-mismatch",
+          "ruleIndex": 9,
+          "level": "error",
+          "message": {
+            "text": "The path m/84'/3'/0'/0/{index} of entry Litecoin has coin type 3, but SLIP-44 registers Litecoin as 2. A wallet that restores the seed looks for Litecoin under 2' and does not find these addresses. Fix: Change the coin type to the SLIP-44 number of the coin."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 56,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Litecoin"
+          }
+        },
+        {
+          "ruleId": "level-not-hardened",
+          "ruleIndex": 12,
+          "level": "error",
+          "message": {
+            "text": "The path m/44/3'/0'/0/{index} of entry Dogecoin derives the purpose without the hardened mark; BIP-44 hardens the purpose, the coin type and the account. A wallet that restores the seed derives other keys, and an extended public key above them with one leaked child private key gives away the parent private key. Fix: Harden the purpose, the coin type and the account with ' or h, as in m/44'/0'/0'/0/0."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 64,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Dogecoin"
+          }
+        },
+        {
+          "ruleId": "level-hardened",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "The path m/44'/60'/2'/0/0' of entry Ethereum account 2 derives the address index hardened; BIP-44 uses normal derivation for the change and the address index. A wallet that restores the seed derives other keys, and the extended public key of the account cannot give these addresses to a watch-only wallet. Fix: Remove the hardened mark from the change and the address index."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 85,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Ethereum account 2"
+          }
+        },
+        {
+          "ruleId": "change-out-of-range",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "The change level of the path m/44'/61'/0'/2/0 of entry Ether Classic is 2; BIP-44 uses 0 for the external chain of receiving addresses and 1 for the internal chain of change, and a wallet that restores the seed looks at no other. Fix: Use 0 for receiving addresses and 1 for change addresses, or the placeholder {change}."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 99,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Ether Classic"
+          }
+        },
+        {
+          "ruleId": "ed25519-unhardened",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "The path m/44'/501'/0'/0 of entry Solana is for an ed25519 key, but the change is not hardened; SLIP-10 derives ed25519 keys through hardened levels only, so a wallet that follows it cannot derive this path at all. Fix: Harden every level of an ed25519 path, as in m/44'/501'/0'/0'."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 106,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Solana"
+          }
+        },
+        {
+          "ruleId": "address-type-family",
+          "ruleIndex": 19,
+          "level": "error",
+          "message": {
+            "text": "Entry Solana as EVM is Solana, which takes ed25519 keys (ed25519), but its addressType is evm, one of EVM account addresses (evm); a wallet for Solana would not show this address. This is a best practice of this tool, not a rule in BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10. Fix: Choose an address type of the family of the coin, or correct the coin."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 114,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "entry": "Solana as EVM"
+          }
+        },
+        {
+          "ruleId": "entry-duplicate",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "Entry 16 is named SOLANA, as is entry 14 at line 103; a finding cannot be traced to one of them. Fix: Give each entry a name of its own, or merge the two."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 117,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "entry": "SOLANA"
+          }
+        },
+        {
+          "ruleId": "field-missing",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Entry 17 has no addressType. Fix: Add the field named; docs/inputs.md lists what each part of the configuration needs."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 123,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "entry": null
+          }
+        },
+        {
+          "ruleId": "field-invalid",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "The network of entry Tron is \"main\"; it must be mainnet or testnet. Fix: Write the value as docs/inputs.md shows: text for the name, coin, network, path and addressType, and a whole number for gapLimit."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 126,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "entry": null
+          }
+        },
+        {
+          "ruleId": "path-duplicate",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Entry Bitcoin native segwit derives m/84'/0'/{account}'/{change}/{index}, and entry Bitcoin nested segwit at line 18 derives m/84'/0'/0'/0/{index}; the two can name the same key. BIP-44 gives each coin a subtree of its own so that keys are not shared; if the two entries are meant to share one key, such as one EVM address on two networks, record that choice. This is a best practice of this tool, not a rule in BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10. Fix: Give each entry a path of its own, or confirm that the two are meant to share one key, such as one EVM address on two networks."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 26,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "entry": "Bitcoin native segwit"
+          }
+        },
+        {
+          "ruleId": "gap-limit-low",
+          "ruleIndex": 17,
+          "level": "warning",
+          "message": {
+            "text": "Entry Bitcoin native segwit has a gap limit of 5, below the 20 of BIP-44: when a seed from a wallet that hands out addresses up to that gap is restored here, the app stops after 5 unused addresses in a row and does not show the funds on the addresses after them. Fix: Set gapLimit to 20 or more, so that a seed restored from another wallet shows every address that wallet handed out."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 28,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Bitcoin native segwit"
+          }
+        },
+        {
+          "ruleId": "mainnet-coin-on-testnet",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Entry Bitcoin test is on testnet, but its path m/49'/0'/0'/0/{index} has coin type 0, the mainnet number of Bitcoin, not 1, which SLIP-44 keeps for the testnets of all coins; the test keys are then keys of a mainnet subtree, and one key can hold coins of both networks. Fix: Use coin type 1 for testnet entries, or confirm that the app and the wallets it must match keep the mainnet coin type on this test network."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 42,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Bitcoin test"
+          }
+        },
+        {
+          "ruleId": "field-unknown",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "The key \"gaplimit\" of entry 7 is not one the tool reads, so its value was left out of every check. Did you mean \"gapLimit\"? The keys of entry 7 are name, coin, network, path, addressType, gapLimit, notes. Fix: Correct the spelling to a key of docs/inputs.md, or remove the key."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 58,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "entry": null
+          }
+        },
+        {
+          "ruleId": "path-depth",
+          "ruleIndex": 7,
+          "level": "warning",
+          "message": {
+            "text": "The path m/44'/145'/0' of entry Bitcoin Cash has 3 levels below m; BIP-44, and BIP-49, BIP-84 and BIP-86 after it, use five: purpose, coin type, account, change and address index. A wallet that restores the seed under them does not look at this path. Fix: Give the path the five levels of BIP-44, or confirm that the wallets the users restore their seed in derive the same shorter or longer path."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 71,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Bitcoin Cash"
+          }
+        },
+        {
+          "ruleId": "account-gap",
+          "ruleIndex": 16,
+          "level": "warning",
+          "message": {
+            "text": "The entries under m/44'/60' on mainnet derive accounts 0 and 2, but not account 1: BIP-44 numbers accounts from 0 up, and its account discovery stops at the first account with no history, so a wallet that restores the seed may never find account 2 of entry Ethereum account 2. Fix: Number the accounts from 0 with no gap, or use the placeholder {account} and let the app open accounts in order."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 85,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "entry": "Ethereum account 2"
+          }
+        },
+        {
+          "ruleId": "path-duplicate",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Entry Polygon derives m/44'/60'/0'/0/0, the same path as entry Ethereum account 0 at line 78, so the two derive one key. BIP-44 gives each coin a subtree of its own so that keys are not shared; if the two entries are meant to share one key, such as one EVM address on two networks, record that choice. This is a best practice of this tool, not a rule in BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10. Fix: Give each entry a path of its own, or confirm that the two are meant to share one key, such as one EVM address on two networks."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 92,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "entry": "Polygon"
+          }
+        },
+        {
+          "ruleId": "coin-not-in-table",
+          "ruleIndex": 20,
+          "level": "note",
+          "message": {
+            "text": "The coin \"polygon\" of entry Polygon is not in the tool's table (bitcoin, litecoin, dogecoin, ethereum, ethereum-classic, bitcoin-cash, solana), so its coin type was checked only against the testnet number and its address type against no family. This is a best practice of this tool, not a rule in BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10. Fix: Check the coin type of the coin in SLIP-44 by hand, or name the coin as the table does (docs/inputs.md)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 90,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "entry": "Polygon"
+          }
+        },
+        {
+          "ruleId": "coin-not-in-table",
+          "ruleIndex": 20,
+          "level": "note",
+          "message": {
+            "text": "The coin \"tron\" of entry Tron is not in the tool's table (bitcoin, litecoin, dogecoin, ethereum, ethereum-classic, bitcoin-cash, solana), so its coin type was checked only against the testnet number and its address type against no family. This is a best practice of this tool, not a rule in BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10. Fix: Check the coin type of the coin in SLIP-44 by hand, or name the coin as the table does (docs/inputs.md)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/wallet.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 125,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "entry": "Tron"
+          }
+        }
+      ],
+      "properties": {
+        "notice": "This report is an input to a review before the wallet ships: not a security audit and not a guarantee that every address can be recovered in another wallet.",
+        "result": "FAIL - 13 findings at or above error (13 error, 7 warning, 2 info)",
+        "sources": [
+          "https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki",
+          "https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki",
+          "https://github.com/bitcoin/bips/blob/master/bip-0049.mediawiki",
+          "https://github.com/bitcoin/bips/blob/master/bip-0084.mediawiki",
+          "https://github.com/bitcoin/bips/blob/master/bip-0086.mediawiki",
+          "https://github.com/satoshilabs/slips/blob/master/slip-0044.md",
+          "https://github.com/satoshilabs/slips/blob/master/slip-0010.md"
+        ]
+      }
+    }
+  ]
+}

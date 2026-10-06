@@ -1,0 +1,260 @@
+{
+  "tool": "wallet-derivation-check",
+  "version": "1.0.0",
+  "input": {
+    "file": "examples/good/wallet.json",
+    "bytes": 1898,
+    "lines": 75
+  },
+  "wallet": {
+    "name": "Harbor Example Wallet",
+    "entries": 9,
+    "coins": [
+      "bitcoin",
+      "litecoin",
+      "ethereum",
+      "avalanche",
+      "solana"
+    ],
+    "networks": [
+      "mainnet",
+      "testnet"
+    ]
+  },
+  "totals": {
+    "findings": 1,
+    "byLevel": {
+      "error": 0,
+      "warning": 0,
+      "info": 1
+    },
+    "hidden": 0
+  },
+  "rules": [
+    {
+      "id": "config-unreadable",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-missing",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-unknown",
+      "level": "warning",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-invalid",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "entry-duplicate",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "secret-in-config",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "path-unparsable",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "path-depth",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "purpose-mismatch",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "coin-type-mismatch",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "testnet-coin-on-mainnet",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "mainnet-coin-on-testnet",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "level-not-hardened",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "level-hardened",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "change-out-of-range",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "ed25519-unhardened",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "account-gap",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "gap-limit-low",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "path-duplicate",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "address-type-family",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "coin-not-in-table",
+      "level": "info",
+      "kind": "best practice",
+      "findings": 1
+    }
+  ],
+  "config": {
+    "minSeverity": "info",
+    "failOn": "error"
+  },
+  "findings": [
+    {
+      "id": "coin-not-in-table",
+      "severity": "info",
+      "message": "The coin \"avalanche\" of entry Avalanche C-Chain is not in the tool's table (bitcoin, litecoin, dogecoin, ethereum, ethereum-classic, bitcoin-cash, solana), so its coin type was checked only against the testnet number and its address type against no family. This is a best practice of this tool, not a rule in BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10.",
+      "file": "examples/good/wallet.json",
+      "line": 62,
+      "column": 7,
+      "at": "examples/good/wallet.json:62",
+      "entry": "Avalanche C-Chain",
+      "fix": "Check the coin type of the coin in SLIP-44 by hand, or name the coin as the table does (docs/inputs.md).",
+      "kind": "best practice"
+    }
+  ],
+  "table": [
+    {
+      "entry": "Bitcoin legacy",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "addressType": "p2pkh",
+      "path": "m/44'/0'/{account}'/{change}/{index}",
+      "gapLimit": 20
+    },
+    {
+      "entry": "Bitcoin nested segwit",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "addressType": "p2sh-p2wpkh",
+      "path": "m/49'/0'/{account}'/{change}/{index}",
+      "gapLimit": 20
+    },
+    {
+      "entry": "Bitcoin native segwit",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "addressType": "p2wpkh",
+      "path": "m/84'/0'/{account}'/{change}/{index}",
+      "gapLimit": 20
+    },
+    {
+      "entry": "Bitcoin taproot",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "addressType": "p2tr",
+      "path": "m/86'/0'/{account}'/{change}/{index}",
+      "gapLimit": 20
+    },
+    {
+      "entry": "Bitcoin testnet",
+      "coin": "bitcoin",
+      "network": "testnet",
+      "addressType": "p2wpkh",
+      "path": "m/84'/1'/{account}'/{change}/{index}",
+      "gapLimit": 20
+    },
+    {
+      "entry": "Litecoin",
+      "coin": "litecoin",
+      "network": "mainnet",
+      "addressType": "p2wpkh",
+      "path": "m/84'/2'/{account}'/{change}/{index}",
+      "gapLimit": 20
+    },
+    {
+      "entry": "Ethereum",
+      "coin": "ethereum",
+      "network": "mainnet",
+      "addressType": "evm",
+      "path": "m/44'/60'/0'/0/{index}",
+      "gapLimit": null
+    },
+    {
+      "entry": "Avalanche C-Chain",
+      "coin": "avalanche",
+      "network": "mainnet",
+      "addressType": "evm",
+      "path": "m/44'/9000'/0'/0/{index}",
+      "gapLimit": null
+    },
+    {
+      "entry": "Solana",
+      "coin": "solana",
+      "network": "mainnet",
+      "addressType": "ed25519",
+      "path": "m/44'/501'/{account}'/0'",
+      "gapLimit": null
+    }
+  ],
+  "notes": [],
+  "notice": "This report is an input to a review before the wallet ships: not a security audit and not a guarantee that every address can be recovered in another wallet.",
+  "result": {
+    "pass": true,
+    "failOn": "error",
+    "text": "PASS - no finding at or above error (1 info)"
+  }
+}

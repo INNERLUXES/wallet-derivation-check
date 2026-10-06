@@ -1,0 +1,130 @@
+{
+  "wallet": "Lantern Example Wallet",
+  "notes": "A made-up configuration for the examples of wallet-derivation-check. It holds a finding of nearly every check, and no seed and no key.",
+  "seedPhrase": "left out on purpose; the name of this key is the finding",
+  "entries": [
+    {
+      "name": "Bitcoin legacy",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/44'/0'/0'/0/{index}",
+      "addressType": "p2pkh",
+      "gapLimit": 20
+    },
+    {
+      "name": "Bitcoin nested segwit",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/84'/0'/0'/0/{index}",
+      "addressType": "p2sh-p2wpkh",
+      "gapLimit": 20
+    },
+    {
+      "name": "Bitcoin native segwit",
+      "coin": "BTC",
+      "network": "mainnet",
+      "path": "m / 84' / 0' / {account}' / {change} / {index}",
+      "addressType": "p2wpkh",
+      "gapLimit": 5
+    },
+    {
+      "name": "Bitcoin taproot",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/86'/1'/0'/0/{index}",
+      "addressType": "p2tr",
+      "gapLimit": 20
+    },
+    {
+      "name": "Bitcoin test",
+      "coin": "bitcoin",
+      "network": "testnet",
+      "path": "m/49'/0'/0'/0/{index}",
+      "addressType": "p2sh-p2wpkh"
+    },
+    {
+      "name": "Bitcoin vault",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/84'/0'/{wallet}'/0/0",
+      "addressType": "p2wpkh"
+    },
+    {
+      "name": "Litecoin",
+      "coin": "litecoin",
+      "network": "mainnet",
+      "path": "m/84'/3'/0'/0/{index}",
+      "addressType": "p2wpkh",
+      "gaplimit": 20
+    },
+    {
+      "name": "Dogecoin",
+      "coin": "dogecoin",
+      "network": "mainnet",
+      "path": "m/44/3'/0'/0/{index}",
+      "addressType": "p2pkh"
+    },
+    {
+      "name": "Bitcoin Cash",
+      "coin": "bitcoin-cash",
+      "network": "mainnet",
+      "path": "m/44'/145'/0'",
+      "addressType": "p2pkh"
+    },
+    {
+      "name": "Ethereum account 0",
+      "coin": "ethereum",
+      "network": "mainnet",
+      "path": "m/44'/60'/0'/0/0",
+      "addressType": "evm"
+    },
+    {
+      "name": "Ethereum account 2",
+      "coin": "ethereum",
+      "network": "mainnet",
+      "path": "m/44'/60'/2'/0/0'",
+      "addressType": "evm"
+    },
+    {
+      "name": "Polygon",
+      "coin": "polygon",
+      "network": "mainnet",
+      "path": "m/44'/60'/0'/0/0",
+      "addressType": "evm"
+    },
+    {
+      "name": "Ether Classic",
+      "coin": "ethereum-classic",
+      "network": "mainnet",
+      "path": "m/44'/61'/0'/2/0",
+      "addressType": "evm"
+    },
+    {
+      "name": "Solana",
+      "coin": "solana",
+      "network": "mainnet",
+      "path": "m/44'/501'/0'/0",
+      "addressType": "ed25519"
+    },
+    {
+      "name": "Solana as EVM",
+      "coin": "solana",
+      "network": "mainnet",
+      "path": "m/44'/501'/1'/0/0",
+      "addressType": "evm"
+    },
+    {
+      "name": "SOLANA",
+      "coin": "solana",
+      "network": "mainnet",
+      "path": "m/44'/501'/2'/0'",
+      "addressType": "ed25519"
+    },
+    {
+      "name": "Tron",
+      "coin": "tron",
+      "network": "main",
+      "path": "m/44'/195'/0'/0/{index}"
+    }
+  ]
+}

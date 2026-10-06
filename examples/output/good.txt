@@ -1,0 +1,52 @@
+wallet-derivation-check: examples/good/wallet.json
+file: 75 lines, 1,898 bytes
+wallet: Harbor Example Wallet; 9 entries on 5 coins (bitcoin, litecoin, ethereum, avalanche and solana); mainnet and testnet
+findings: 1 (1 info)
+
+Checks (21)
+
+  check                    level    kind           findings
+  config-unreadable        error    input          0
+  field-missing            error    input          0
+  field-unknown            warning  input          0
+  field-invalid            error    input          0
+  entry-duplicate          error    input          0
+  secret-in-config         error    input          0
+  path-unparsable          error    documented     0
+  path-depth               warning  documented     0
+  purpose-mismatch         error    documented     0
+  coin-type-mismatch       error    documented     0
+  testnet-coin-on-mainnet  error    documented     0
+  mainnet-coin-on-testnet  warning  documented     0
+  level-not-hardened       error    documented     0
+  level-hardened           error    documented     0
+  change-out-of-range      error    documented     0
+  ed25519-unhardened       error    documented     0
+  account-gap              warning  documented     0
+  gap-limit-low            warning  documented     0
+  path-duplicate           warning  best practice  0
+  address-type-family      error    best practice  0
+  coin-not-in-table        info     best practice  1
+
+Findings (1)
+
+  INFO     coin-not-in-table        examples/good/wallet.json:62
+           The coin "avalanche" of entry Avalanche C-Chain is not in the tool's table (bitcoin, litecoin, dogecoin, ethereum, ethereum-classic, bitcoin-cash, solana), so its coin type was checked only against the testnet number and its address type against no family. This is a best practice of this tool, not a rule in BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10.
+           fix: Check the coin type of the coin in SLIP-44 by hand, or name the coin as the table does (docs/inputs.md).
+
+Entries (9)
+
+  entry                  coin       network  type         gap  path
+  Bitcoin legacy         bitcoin    mainnet  p2pkh        20   m/44'/0'/{account}'/{change}/{index}
+  Bitcoin nested segwit  bitcoin    mainnet  p2sh-p2wpkh  20   m/49'/0'/{account}'/{change}/{index}
+  Bitcoin native segwit  bitcoin    mainnet  p2wpkh       20   m/84'/0'/{account}'/{change}/{index}
+  Bitcoin taproot        bitcoin    mainnet  p2tr         20   m/86'/0'/{account}'/{change}/{index}
+  Bitcoin testnet        bitcoin    testnet  p2wpkh       20   m/84'/1'/{account}'/{change}/{index}
+  Litecoin               litecoin   mainnet  p2wpkh       20   m/84'/2'/{account}'/{change}/{index}
+  Ethereum               ethereum   mainnet  evm          -    m/44'/60'/0'/0/{index}
+  Avalanche C-Chain      avalanche  mainnet  evm          -    m/44'/9000'/0'/0/{index}
+  Solana                 solana     mainnet  ed25519      -    m/44'/501'/{account}'/0'
+
+This report is an input to a review before the wallet ships: not a security audit and not a guarantee that every address can be recovered in another wallet.
+
+RESULT: PASS - no finding at or above error (1 info)

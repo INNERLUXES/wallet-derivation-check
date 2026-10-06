@@ -1,0 +1,25 @@
+wallet-derivation-check checks
+
+  config-unreadable        error    input          the file is not JSON the reader can follow, or its top level is not an object, so no configuration was read
+  field-missing            error    input          a field the checks need is not in the configuration: the wallet name or the entries, or the name, coin, network, path or addressType of an entry
+  field-unknown            warning  input          a key the tool does not read, often a misspelt one; its value was left out of every check
+  field-invalid            error    input          a value of the wrong type or form: a number where text belongs, a network other than mainnet or testnet, an address type the tool does not know, or a gap limit that is not a whole number
+  entry-duplicate          error    input          two entries share a name (compared without case and outer spaces), so a reader cannot tell which line a finding comes from
+  secret-in-config         error    input          the configuration holds a key named for a seed, a mnemonic or a private key, or a value shaped like one; the tool never reads it and never shows it
+  path-unparsable          error    documented     the path is not m followed by levels that are each a whole number below 2^31 with an optional hardened mark, or a placeholder {account}, {change} or {index} in its place
+  path-depth               warning  documented     a secp256k1 path that does not have the five levels of BIP-44 (purpose, coin type, account, change and address index), or an ed25519 path with fewer than three
+  purpose-mismatch         error    documented     the purpose (level 1) is not the one the address type is derived under: 44 for p2pkh, evm and ed25519, 49 for p2sh-p2wpkh, 84 for p2wpkh and 86 for p2tr
+  coin-type-mismatch       error    documented     on mainnet, the coin type (level 2) is not the number SLIP-44 registers for the coin
+  testnet-coin-on-mainnet  error    documented     a mainnet entry uses coin type 1, which SLIP-44 keeps for the testnets of all coins
+  mainnet-coin-on-testnet  warning  documented     a testnet entry uses a coin type other than 1, so its keys are the keys of a mainnet subtree
+  level-not-hardened       error    documented     on a secp256k1 path, the purpose, the coin type or the account is not hardened
+  level-hardened           error    documented     on a five-level secp256k1 path, the change or the address index is hardened, where BIP-44 uses normal derivation
+  change-out-of-range      error    documented     on a five-level secp256k1 path, the change level is a number other than 0 (receiving) or 1 (change)
+  ed25519-unhardened       error    documented     a path of the ed25519 address type has a level that is not hardened, which SLIP-10 does not define for ed25519
+  account-gap              warning  documented     entries of one purpose, coin type and network derive accounts with a gap, or not from account 0, so BIP-44 account discovery stops before the later ones
+  gap-limit-low            warning  documented     the gap limit of an entry is below the 20 of BIP-44
+  path-duplicate           warning  best practice  two entries derive the same path, or paths that can name the same key, so one key serves both
+  address-type-family      error    best practice  the address type is not of the family of the coin in the tool's table: a Bitcoin script type on an EVM coin or on Solana, an EVM address on a Bitcoin coin, and so on
+  coin-not-in-table        info     best practice  the coin is not in the tool's short table of coins whose SLIP-44 number was read in the saved copy, so its coin type and its family were not checked
+
+A documented check rests on BIP-32, BIP-44, BIP-49, BIP-84, BIP-86, SLIP-44 or SLIP-10; a best practice check is this tool's own choice and says so in its message. An input check is about the configuration file itself.

@@ -1,0 +1,75 @@
+{
+  "wallet": "Harbor Example Wallet",
+  "notes": "A made-up configuration for the examples of wallet-derivation-check, with no seed and no key.",
+  "entries": [
+    {
+      "name": "Bitcoin legacy",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/44'/0'/{account}'/{change}/{index}",
+      "addressType": "p2pkh",
+      "gapLimit": 20
+    },
+    {
+      "name": "Bitcoin nested segwit",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/49'/0'/{account}'/{change}/{index}",
+      "addressType": "p2sh-p2wpkh",
+      "gapLimit": 20
+    },
+    {
+      "name": "Bitcoin native segwit",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/84'/0'/{account}'/{change}/{index}",
+      "addressType": "p2wpkh",
+      "gapLimit": 20
+    },
+    {
+      "name": "Bitcoin taproot",
+      "coin": "bitcoin",
+      "network": "mainnet",
+      "path": "m/86'/0'/{account}'/{change}/{index}",
+      "addressType": "p2tr",
+      "gapLimit": 20
+    },
+    {
+      "name": "Bitcoin testnet",
+      "coin": "bitcoin",
+      "network": "testnet",
+      "path": "m/84'/1'/{account}'/{change}/{index}",
+      "addressType": "p2wpkh",
+      "gapLimit": 20
+    },
+    {
+      "name": "Litecoin",
+      "coin": "litecoin",
+      "network": "mainnet",
+      "path": "m/84'/2'/{account}'/{change}/{index}",
+      "addressType": "p2wpkh",
+      "gapLimit": 20
+    },
+    {
+      "name": "Ethereum",
+      "coin": "ethereum",
+      "network": "mainnet",
+      "path": "m/44'/60'/0'/0/{index}",
+      "addressType": "evm"
+    },
+    {
+      "name": "Avalanche C-Chain",
+      "coin": "avalanche",
+      "network": "mainnet",
+      "path": "m/44'/9000'/0'/0/{index}",
+      "addressType": "evm"
+    },
+    {
+      "name": "Solana",
+      "coin": "solana",
+      "network": "mainnet",
+      "path": "m/44'/501'/{account}'/0'",
+      "addressType": "ed25519"
+    }
+  ]
+}
