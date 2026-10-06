@@ -1,0 +1,53 @@
+{
+  "name": "wallet-derivation-check",
+  "version": "1.0.0",
+  "description": "Wallet derivation check: reads the JSON configuration of the accounts a crypto wallet app derives from one seed (coin, network, derivation path with account, change and index, address type and gap limit), never reads a seed or a key, fetches nothing and runs nothing, and lists the problems to fix before the wallet ships with file and line: paths that cannot be parsed, a purpose that does not match the address type (BIP-44, BIP-49, BIP-84, BIP-86), a coin type that is not the SLIP-44 number of the coin, testnet and mainnet coin types swapped, levels hardened or not hardened against BIP-44, change levels other than 0 and 1, ed25519 paths with unhardened levels (SLIP-10), two entries that derive the same key, gaps in the accounts that stop BIP-44 discovery and gap limits under 20. Text, markdown, JSON and SARIF output, exit codes for a pipeline, no dependencies.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "wallet-derivation-check": "bin/wallet-derivation-check.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "examples",
+    "research",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "test:coverage": "node --test --experimental-test-coverage \"test/*.test.js\"",
+    "check": "node tools/check.mjs",
+    "example": "node tools/example.mjs"
+  },
+  "keywords": [
+    "crypto-wallet",
+    "hd-wallet",
+    "bip32",
+    "bip44",
+    "bip49",
+    "bip84",
+    "bip86",
+    "slip-44",
+    "slip-10",
+    "derivation-path",
+    "static-analysis",
+    "sarif",
+    "cli"
+  ],
+  "author": "INNERLUXES <info@innerluxes.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INNERLUXES/wallet-derivation-check.git"
+  },
+  "homepage": "https://innerluxes.dev/blockchain/cryptocurrency-wallet"
+}
